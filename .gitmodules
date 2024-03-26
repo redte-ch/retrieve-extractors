@@ -1,0 +1,4 @@
+[submodule "tests/share"]
+	path = tests/share
+	url = git@github.com:py-pdf/sample-files.git
+	branch = main

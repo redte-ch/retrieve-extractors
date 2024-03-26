@@ -1,0 +1,8 @@
+[wrap-file]
+directory = unity
+source_url = https://github.com/ThrowTheSwitch/Unity/archive/refs/tags/v2.6.0.tar.gz
+source_filename = v2.6.0.tar.gz
+source_hash = aa4c9fb1ae5fc5242f914c65f3557e817e40cb37f04a31e5ff76d1ab89dbf674
+
+[provide]
+unity = unity_dep
