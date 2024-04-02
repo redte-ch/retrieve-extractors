@@ -15,7 +15,7 @@
 
 # Required headers for the library.
 retrieve_headers = [
-    meson.project_source_root() / 'include/retrieve.h',
+    meson.project_source_root() / 'include/document.h',
 ]
 
 # Install the headers of the library.

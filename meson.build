@@ -23,7 +23,7 @@ project(
         'backend=ninja',
         'optimization=3',
         'warning_level=3',
-        'c_std=gnu18',
+        'c_std=gnu23',
         '''c_args=
             -O3
             -Wall
@@ -38,9 +38,10 @@ project(
             -Wstrict-prototypes
             -Wwrite-strings
             -fopenmp
+            -fvisibility=hidden
             -march=native
             -mtune=native
-            -std=gnu18
+            -std=gnu23
         ''',
         '''c_link_args=
             -O3
@@ -48,6 +49,7 @@ project(
             -Werror
             -Wextra
             -fopenmp
+            -fvisibility=hidden
             -march=native
             -mtune=native
         ''',
@@ -58,14 +60,15 @@ project(
 description = 'Library to deal with text extraction in Retrieve.'
 
 # Source files for the library.
-retrieve_src = files(['src/retrieve.c'])
+retrieve_src = files(['src/document.c'])
 
 # Required headers for the library.
-retrieve_include = include_directories('include')
+retrieve_include = [include_directories('include')]
 
 # Dependencies for the library.
-mupdf_dep = dependency('mupdf', required: true)
-unity_dep = subproject('unity').get_variable('unity_dep')
+subdir('ext/mupdf')
+logc_dep = dependency('log.c')
+unity_dep = dependency('unity')
 
 # Add name and version to the build args.
 build_args = [

@@ -21,5 +21,5 @@ retrieve_lib = shared_library(
     install : false,
     c_args : build_args,
     gnu_symbol_visibility : 'hidden',
-    include_directories : retrieve_include,
+    include_directories : [retrieve_include],
 )

@@ -1,0 +1,27 @@
+[tool.poe.tasks]
+install = "conan install . --output-folder=build/conan --build=missing"
+build = "meson setup --native-file build/conan/conan_meson_native.ini --reconfigure build"
+_format_src = "meson --internal clangformat src build"
+_format_tests = "meson --internal clangformat tests build"
+_format_include = "meson --internal clangformat include build"
+format = [
+    "_format_src",
+    "_format_tests",
+    "_format_include",
+]
+_lint_src = "meson --internal clangtidy src build"
+_lint_tests = "meson --internal clangtidy tests build"
+_lint_include = "meson --internal clangtidy include build"
+lint = [
+    "_lint_src",
+    "_lint_tests",
+    "_lint_include",
+]
+test = "ninja -C build test -j 6"
+all = [
+    "install",
+    "build",
+    "format",
+    "lint",
+    "test",
+]

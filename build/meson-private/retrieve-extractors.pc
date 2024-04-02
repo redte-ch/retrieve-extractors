@@ -1,0 +1,9 @@
+prefix=/opt/homebrew
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: retrieve-extractors
+Description: Library to deal with text extraction in Retrieve.
+Version: 0.0.0
+Libs: -L${libdir} -lretrieve-extractors
+Cflags: -I${includedir}/retrieve-extractors

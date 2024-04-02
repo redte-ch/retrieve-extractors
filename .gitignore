@@ -52,8 +52,8 @@ Mkfile.old
 dkms.conf
 
 # Meson
-subprojects/*-source/
-subprojects/packagecache/
+!subprojects/*.wrap
+subprojects/
 
 # IDEs
 .idea

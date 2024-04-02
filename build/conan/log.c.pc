@@ -1,0 +1,10 @@
+prefix=/Users/hyperion/.conan2/p/b/log.c6604db9a6906a/p
+libdir=${prefix}/lib
+includedir=${prefix}/include
+bindir=${prefix}/bin
+
+Name: log.c
+Description: Conan package: log.c
+Version: cci.20200620
+Libs: -L"${libdir}" -llog.c
+Cflags: -I"${includedir}"

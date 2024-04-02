@@ -1,0 +1,10 @@
+prefix=/Users/hyperion/Sites/redte.ch/retrieve-extractors/build
+includedir=${prefix}/include
+libdir=${prefix}/lib
+srcdir=/Users/hyperion/Sites/redte.ch/retrieve-extractors
+
+Name: retrieve-extractors
+Description: Library to deal with text extraction in Retrieve.
+Version: 0.0.0
+Libs: -L${prefix}/src -lretrieve-extractors
+Cflags: -I${prefix}/include -I${srcdir}/include -I/opt/homebrew/opt/mupdf/include -I/opt/homebrew/opt/mupdf/include -I${prefix}/src -I${srcdir}/src

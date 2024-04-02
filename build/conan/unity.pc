@@ -1,0 +1,11 @@
+prefix=/Users/hyperion/.conan2/p/b/unity06d3c497e09c8/p
+libdir=${prefix}/lib
+includedir=${prefix}/include
+includedir1=${prefix}/include/unity
+bindir=${prefix}/bin
+
+Name: unity
+Description: Conan package: unity
+Version: 2.6.0
+Libs: -L"${libdir}" -lunity
+Cflags: -I"${includedir}" -I"${includedir1}"

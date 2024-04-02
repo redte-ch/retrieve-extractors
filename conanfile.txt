@@ -1,0 +1,7 @@
+[requires]
+log.c/cci.20200620
+unity/2.6.0
+
+[generators]
+PkgConfigDeps
+MesonToolchain

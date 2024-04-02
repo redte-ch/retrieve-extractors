@@ -13,21 +13,17 @@
 #
 # Author: Mauko Quiroga-Alvarado <mauko@redte.ch>.
 
-# Source files for the tests.
-tests_src = ['src/test_document.c']
-
-# Make the library usable as a dependency.
-retrieve_dep = declare_dependency(
-    include_directories: [retrieve_include],
-    dependencies: [mupdf_dep],
-    link_with : retrieve_lib,
+cc = meson.get_compiler('c')
+mupdf_dir = '/opt/homebrew/opt/mupdf'
+mupdf_inc = include_directories(mupdf_dir / 'include')
+mupdf_lib = cc.find_library(
+    'mupdf',
+    dirs : [mupdf_dir / 'lib'],
+    has_headers : ['mupdf/fitz.h', 'mupdf/pdf.h'],
+    header_include_directories : [mupdf_inc],
+    required : true,
 )
-
-# Create the test executable.
-retrieve_test = executable(
-    'retrieve-test',
-    tests_src,
-    dependencies: [retrieve_dep, unity_dep],
-    include_directories: retrieve_include,
-    link_with: retrieve_lib,
+mupdf_dep = declare_dependency(
+    dependencies : [mupdf_lib],
+    include_directories : [mupdf_inc],
 )
