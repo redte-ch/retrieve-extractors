@@ -23,14 +23,19 @@ void setUp(void) {}
 void tearDown(void) {}
 
 void test_success(void) {
-  const struct Either either = success();
-  TEST_ASSERT_EQUAL_INT(either.result, EXIT_SUCCESS);
+  const struct Either either = success(NULL, "success!");
+  TEST_ASSERT_NULL(either.context);
+  TEST_ASSERT_EQUAL_STRING("success!", either.result);
+  TEST_ASSERT_EQUAL_INT(EXIT_SUCCESS, either.status);
   TEST_ASSERT_NULL(either.error);
 }
 
 void test_failure(void) {
-  const struct Either either = failure("did not work");
-  TEST_ASSERT_NOT_EQUAL_INT(either.result, EXIT_SUCCESS);
+  const struct Either either =
+      failure(NULL, NULL, EXIT_FAILURE, "did not work");
+  TEST_ASSERT_NULL(either.context);
+  TEST_ASSERT_NULL(either.result);
+  TEST_ASSERT_EQUAL_INT(EXIT_FAILURE, either.status);
   TEST_ASSERT_EQUAL_STRING("did not work", either.error);
 }
 

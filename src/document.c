@@ -14,93 +14,61 @@
 // Author: Mauko Quiroga-Alvarado <mauko@redte.ch>.
 
 #include "document.h"
+#include "either.h"
 #include <mupdf/fitz/context.h>
 #include <mupdf/fitz/document.h>
+#include <mupdf/fitz/types.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-/*
- * Open a document.
- *
- * This function opens a document from a given file path. It first allocates
- * memory for a new Document structure. Then, it creates a new context to hold
- * the exception stack and various caches. If the context cannot be created, it
- * prints an error message and returns the document with the status set.
- *
- * After successfully creating the context, it tries to register the default
- * document handlers. If this fails, it prints an error message, drops the
- * context, and returns the document with the status set.
- *
- * Finally, it tries to open the document from the given file path. If this
- * fails, it prints an error message, drops the context, and returns the
- * document with the status set.
- *
- * @param filepath The path to the document to open.
- * @return A pointer to the opened Document structure, or a Document structure
- * with the status set if an error occurred.
- */
-struct Document *open_document(const char *filepath) {
-  struct Document *document = NULL;
+// Error messages
+const char *const ERR_CONTEXT_CREATE = "could not create context";
+const char *const ERR_FILEPATH_EMPTY = "filepath is empty";
+const char *const ERR_NOT_A_PDF = "file is not a PDF";
+const char *const ERR_HANDLERS_REGISTER = "could not register handlers";
+const char *const ERR_DOC_OPEN = "could not open document";
 
-  /* Allocate memory for the document structure. */
-  document = malloc(sizeof(struct Document));
+/** Handle errors. **/
+struct Either fail(fz_context *context, const char *error) {
+  const int status = fprintf(stderr, "%s\n", error);
+  return failure(context, NULL, status, error);
+}
+
+/* Open a document. */
+struct Either open_document(const char *filepath) {
+  fz_document *document = NULL;
 
   /* Create a context to hold the exception stack and various caches. */
-  document->context = fz_new_context(NULL, NULL, FZ_STORE_UNLIMITED);
+  fz_context *context = fz_new_context(NULL, NULL, FZ_STORE_UNLIMITED);
 
   /* Check if the context is empty. */
-  if (!document->context) {
-    goto could_not_create_context;
+  if (!context) {
+    return fail(context, ERR_CONTEXT_CREATE);
   }
 
   /* Check if the filepath is empty. */
   if (!filepath || filepath[0] == '\0') {
-    goto filepath_is_empty;
+    return fail(context, ERR_FILEPATH_EMPTY);
   }
 
-  /* Check if the filepath is not a PDF. */
+  /* Check if the file is not a PDF. */
   if (strstr(filepath, ".pdf") == NULL) {
-    document->status = fprintf(stderr, "file is not a PDF\n");
-    goto cleanup;
+    return fail(context, ERR_NOT_A_PDF);
   }
 
   /* Register the default file types to handle. */
-  fz_try(document->context) {
-    fz_register_document_handlers(document->context);
-  }
+  fz_try(context) { fz_register_document_handlers(context); }
 
-  fz_catch(document->context) {
-    document->status = fprintf(stderr, "could not register handlers\n");
-    goto cleanup;
-  }
+  /* Check if the handlers could not be registered. */
+  fz_catch(context) { return fail(context, ERR_HANDLERS_REGISTER); }
 
   /* Open the document from disk. */
-  fz_try(document->context) {
-    document->document = fz_open_document(document->context, filepath);
-  }
+  fz_try(context) { document = fz_open_document(context, filepath); }
 
-  fz_catch(document->context) {
-    document->status = fprintf(stderr, "could not open document\n");
-    goto cleanup;
-  }
+  /* Check if the document could not be opened. */
+  fz_catch(context) { return fail(context, ERR_DOC_OPEN); }
 
-  goto finally;
-
-could_not_create_context:
-  document->status = fprintf(stderr, "could not create context\n");
-  goto finally;
-
-filepath_is_empty:
-  document->status = fprintf(stderr, "filepath is empty\n");
-  goto finally;
-
-cleanup:
-  fz_drop_context(document->context);
-  return document;
-
-finally:
-  return document;
+  return success(context, document);
 }
 
 /*
@@ -109,10 +77,11 @@ finally:
  * This function closes a document by dropping the document and its context
  * from memory, and then freeing the Document structure.
  *
+ * @param context A pointer to the document to close.
  * @param document A pointer to the Document structure to close.
  */
-void close_document(struct Document *document) {
-  fz_drop_document(document->context, document->document);
-  fz_drop_context(document->context);
-  free(document);
+struct Either close_document(fz_context *context, fz_document *document) {
+  fz_drop_document(context, document);
+  fz_drop_context(context);
+  return success(NULL, NULL);
 }

@@ -14,6 +14,7 @@
 // Author: Mauko Quiroga-Alvarado <mauko@redte.ch>.
 
 #include <document.h>
+#include <either.h>
 #include <stdlib.h>
 #include <unity.h>
 #include <unity_internals.h>
@@ -24,35 +25,57 @@ void tearDown(void) {}
 
 void test_open_document(void) {
   const char *filename = "../tests/share/001-trivial/minimal-document.pdf";
-  struct Document *document = open_document(filename);
-  TEST_ASSERT_EQUAL_INT(document->status, EXIT_SUCCESS);
-  TEST_ASSERT_NOT_NULL(document->document);
-  close_document(document);
+  const struct Either document = open_document(filename);
+  TEST_ASSERT_NOT_NULL(document.context);
+  TEST_ASSERT_NOT_NULL(document.result);
+  TEST_ASSERT_EQUAL_INT(EXIT_SUCCESS, document.status);
+  TEST_ASSERT_NULL(document.error);
+  const struct Either closed =
+      close_document(document.context, document.result);
+  TEST_ASSERT_EQUAL_INT(EXIT_SUCCESS, closed.status);
 }
 
 void test_open_document_when_filepath_is_null(void) {
   const char *filename = NULL;
-  struct Document *document = open_document(filename);
-  TEST_ASSERT_NOT_EQUAL_INT(document->status, EXIT_SUCCESS);
-  TEST_ASSERT_NULL(document->document);
-  close_document(document);
+  const struct Either document = open_document(filename);
+  TEST_ASSERT_NOT_NULL(document.context);
+  TEST_ASSERT_NULL(document.result);
+  TEST_ASSERT_NOT_EQUAL_INT(EXIT_SUCCESS, document.status);
+  TEST_ASSERT_EQUAL_STRING("filepath is empty", document.error);
+  const struct Either closed =
+      close_document(document.context, document.result);
+  TEST_ASSERT_EQUAL_INT(EXIT_SUCCESS, closed.status);
 }
 
-// void test_open_document_when_not_pdf(void) {
-//   const char *filename = "../tests/share/001-trivial/minimal-document.tex";
-//   struct Document *document = open_document(filename);
-//   TEST_ASSERT_NOT_EQUAL_INT(document->status, EXIT_SUCCESS);
-//   TEST_ASSERT_NULL(document->document);
-//   close_document(document);
-// }
+void test_open_document_when_not_pdf(void) {
+  const char *filename = "../tests/share/001-trivial/minimal-document.tex";
+  const struct Either document = open_document(filename);
+  TEST_ASSERT_NOT_NULL(document.context);
+  TEST_ASSERT_NULL(document.result);
+  TEST_ASSERT_NOT_EQUAL_INT(EXIT_SUCCESS, document.status);
+  TEST_ASSERT_EQUAL_STRING("file is not a PDF", document.error);
+  const struct Either closed =
+      close_document(document.context, document.result);
+  TEST_ASSERT_EQUAL_INT(EXIT_SUCCESS, closed.status);
+}
 
-void test_open_document_when_not_found(void) {}
+void test_open_document_when_not_found(void) {
+  const char *filename = "/does/not/exist.pdf";
+  const struct Either document = open_document(filename);
+  TEST_ASSERT_NOT_NULL(document.context);
+  TEST_ASSERT_NULL(document.result);
+  TEST_ASSERT_NOT_EQUAL_INT(EXIT_SUCCESS, document.status);
+  TEST_ASSERT_EQUAL_STRING("could not open document", document.error);
+  const struct Either closed =
+      close_document(document.context, document.result);
+  TEST_ASSERT_EQUAL_INT(EXIT_SUCCESS, closed.status);
+}
 
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(test_open_document);
   RUN_TEST(test_open_document_when_filepath_is_null);
-  //  RUN_TEST(test_open_document_when_not_pdf);
+  RUN_TEST(test_open_document_when_not_pdf);
   RUN_TEST(test_open_document_when_not_found);
   return UNITY_END();
 }

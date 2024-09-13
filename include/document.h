@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "either.h"
 #include <mupdf/fitz/context.h>
 #include <mupdf/fitz/types.h>
 
@@ -22,14 +23,29 @@
 #define public
 #endif // public
 
-struct Document {
-  fz_document *document;
-  fz_context *context;
-  int status;
-};
-
+/*
+ * Open a document.
+ *
+ * This function opens a document from a given file path. It first allocates
+ * memory for a new Document structure. Then, it creates a new context to hold
+ * the exception stack and various caches. If the context cannot be created, it
+ * prints an error message and returns the document with the status set.
+ *
+ * After successfully creating the context, it tries to register the default
+ * document handlers. If this fails, it prints an error message, drops the
+ * context, and returns the document with the status set.
+ *
+ * Finally, it tries to open the document from the given file path. If this
+ * fails, it prints an error message, drops the context, and returns the
+ * document with the status set.
+ *
+ * @param filepath The path to the document to open.
+ * @return A pointer to the opened Document structure, or a Document structure
+ * with the status set if an error occurred.
+ */
 public
-struct Document *open_document(const char *filepath);
+struct Either open_document(const char *filepath);
 
+/* Close a document. */
 public
-void close_document(struct Document *document);
+struct Either close_document(fz_context *context, fz_document *document);

@@ -17,11 +17,16 @@
 #include <stdlib.h>
 
 /* Struct representing a successful result. */
-struct Either success() {
-  return (struct Either){.result = EXIT_SUCCESS, .error = NULL};
+struct Either success(void *context, void *result) {
+  return (struct Either){.context = context,
+                         .result = result,
+                         .status = EXIT_SUCCESS,
+                         .error = NULL};
 }
 
 /* Failure struct with the given error message. */
-struct Either failure(const char *error) {
-  return (struct Either){.result = EXIT_FAILURE, .error = error};
+struct Either failure(void *context, void *result, const int status,
+                      const char *error) {
+  return (struct Either){
+      .context = context, .result = result, .status = status, .error = error};
 }

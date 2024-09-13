@@ -27,16 +27,21 @@
  * to handle each outcome differently.
  */
 struct Either {
+  /* Context of an operation. */
+  void *context;
   /* Result of an operation. */
-  int result;
+  void *result;
+  /* Status of an operation. */
+  int status;
   /* Error message. */
   const char *error;
 };
 
 /* Struct representing a successful result. */
 public
-struct Either success();
+struct Either success(void *context, void *result);
 
 /* Failure struct with the given error message. */
 public
-struct Either failure(const char *error);
+struct Either failure(void *context, void *result, int status,
+                      const char *error);
