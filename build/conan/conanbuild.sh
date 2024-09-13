@@ -1,1 +1,0 @@
-. "/Users/hyperion/Sites/redte.ch/retrieve-extractors/build/conan/conanbuildenv-release-armv8.sh"

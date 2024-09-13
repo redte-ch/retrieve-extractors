@@ -13,9 +13,6 @@
 #
 # Author: Mauko Quiroga-Alvarado <mauko@redte.ch>.
 
-# Source files for the tests.
-tests_src = ['src/test_document.c']
-
 # Make the library usable as a dependency.
 retrieve_dep = declare_dependency(
     include_directories: [retrieve_include],
@@ -23,10 +20,19 @@ retrieve_dep = declare_dependency(
     link_with : retrieve_lib,
 )
 
-# Create the test executable.
-retrieve_test = executable(
-    'retrieve-test',
-    tests_src,
+# Create the test executable for either.
+retrieve_test_either = executable(
+    'retrieve-test-either',
+    ['src/test_either.c'],
+    dependencies: [retrieve_dep, unity_dep],
+    include_directories: retrieve_include,
+    link_with: retrieve_lib,
+)
+
+# Create the test executable for document.
+retrieve_test_document = executable(
+    'retrieve-test-document',
+    ['src/test_document.c'],
     dependencies: [retrieve_dep, unity_dep],
     include_directories: retrieve_include,
     link_with: retrieve_lib,

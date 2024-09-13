@@ -1,7 +1,0 @@
-# ninja log v5
-0	441	1712085597784018024	build.ninja	cfbc7adc290f1a9a
-0	188	1712085598004987096	src/libretrieve-extractors.dylib.p/document.c.o	b0caee464585cfec
-0	189	1712085598004987179	tests/retrieve-test.p/src_test_document.c.o	916783cf91c685da
-188	294	1712085598106121086	src/libretrieve-extractors.dylib	fb14a3f37ba73a5a
-294	399	1712085598210652483	src/libretrieve-extractors.dylib.p/libretrieve-extractors.dylib.symbols	2bf7d3d06976b784
-399	434	1712085598252312691	tests/retrieve-test	5d3984b93d147ad2

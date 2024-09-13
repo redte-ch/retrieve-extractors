@@ -60,7 +60,7 @@ project(
 description = 'Library to deal with text extraction in Retrieve.'
 
 # Source files for the library.
-retrieve_src = files(['src/document.c'])
+retrieve_src = files(['src/document.c', 'src/either.c'])
 
 # Required headers for the library.
 retrieve_include = [include_directories('include')]
@@ -94,5 +94,6 @@ subdir('lib/pkgconfig')
 
 # Run the tests.
 if not meson.is_subproject()
-    test('tests', retrieve_test)
+    test('tests', retrieve_test_either)
+    test('tests', retrieve_test_document)
 endif

@@ -1,1 +1,0 @@
-[{"cmd": ["/Users/hyperion/Sites/redte.ch/retrieve-extractors/build/tests/retrieve-test"], "env": {}, "name": "tests", "workdir": null, "timeout": 30, "suite": ["retrieve-extractors"], "is_parallel": true, "priority": 0, "protocol": "exitcode", "depends": ["59830eb@@retrieve-test@exe"], "extra_paths": []}]
