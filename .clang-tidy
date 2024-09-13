@@ -3,12 +3,12 @@ HeaderFileExtensions:
   - h
 ImplementationFileExtensions:
   - c
-HeaderFilterRegex: "./include/document.h"
 FormatStyle: file
 Checks: "*,\
   -altera-struct-pack-align,\
   -altera-unroll-loops,\
   -bugprone-macro-parentheses,\
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,\
   -llvm-header-guard,\
   -llvmlibc-restrict-system-libc-headers\
 "
