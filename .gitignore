@@ -54,6 +54,7 @@ dkms.conf
 # Meson
 !subprojects/*.wrap
 subprojects/
+build/
 
 # IDEs
 .idea

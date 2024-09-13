@@ -15,6 +15,7 @@
 
 # Required headers for the library.
 retrieve_headers = [
+    meson.project_source_root() / 'include/either.h',
     meson.project_source_root() / 'include/document.h',
 ]
 
